@@ -17,13 +17,12 @@ app.get("/", (req, res) => {
 app.post("/ai/analyse", async (req, res) => {
   try {
     const userText = req.body.text;
-
     if (!userText) {
       return res.status(400).json({ error: "No text provided" });
     }
 
-    // Correct new model name
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Use correct model for @google/generative-ai v0.5.0
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const result = await model.generateContent(userText);
     const response = await result.response;
@@ -36,7 +35,7 @@ app.post("/ai/analyse", async (req, res) => {
   }
 });
 
-// Port for Render deployment
+// Port for Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
