@@ -22,7 +22,8 @@ app.post("/ai/analyse", async (req, res) => {
       return res.status(400).json({ error: "No text provided" });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    // Correct new model name
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model.generateContent(userText);
     const response = await result.response;
@@ -35,7 +36,7 @@ app.post("/ai/analyse", async (req, res) => {
   }
 });
 
-// Port for Render
+// Port for Render deployment
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
