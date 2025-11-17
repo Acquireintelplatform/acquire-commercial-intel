@@ -23,6 +23,7 @@ app.post("/ai/analyse", async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
     const result = await model.generateContent(userText);
     const response = await result.response;
     const text = response.text();
