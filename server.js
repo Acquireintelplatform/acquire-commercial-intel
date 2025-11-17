@@ -1,46 +1,41 @@
 // Simple Express server for Acquire Commercial Intel backend
-
 const express = require("express");
-const bodyParser = require("body-parser");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
+app.use(express.json());
 
-// Allow JSON body input
-app.use(bodyParser.json());
+// Load Google API key from Render environment variables
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-// Basic home route
+// Home route
 app.get("/", (req, res) => {
   res.send("Acquire Commercial Intel backend is running 🚀");
 });
 
-// POST AI analysis route
+// POST /ai/analyse route
 app.post("/ai/analyse", async (req, res) => {
   try {
     const userText = req.body.text;
 
     if (!userText) {
-      return res.status(400).json({ error: "Missing 'text' in request body" });
+      return res.status(400).json({ error: "No text provided" });
     }
 
-    // Initialise Google Gemini API using your Render environment variable
-    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
     const result = await model.generateContent(userText);
-    const aiResponse = await result.response.text();
+    const response = await result.response;
+    const text = response.text();
 
-    res.json({ response: aiResponse });
-
-  } catch (error) {
-    console.error("AI Error:", error);
+    res.json({ reply: text });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "AI request failed" });
   }
 });
 
-// Port for Render (or local testing)
+// Port for Render
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
