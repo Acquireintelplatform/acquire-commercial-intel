@@ -5,6 +5,7 @@ const app = express();
 
 // Basic home route
 app.get("/", (req, res) => {
+
   res.send("Acquire Commercial Intel backend is running 🚀");
 });
 
